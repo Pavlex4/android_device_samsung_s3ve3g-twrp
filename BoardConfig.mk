@@ -1,4 +1,3 @@
-MALLOC_IMPL := dlmalloc
 # Platform
 TARGET_BOARD_PLATFORM := msm8226
 # Architecture
@@ -12,6 +11,7 @@ TARGET_CPU_VARIANT := cortex-a7
 TARGET_BOOTLOADER_BOARD_NAME := MSM8226
 TARGET_NO_BOOTLOADER := true
 # Kernel
+BOARD_CUSTOM_BOOTIMG_MK := $(DEVICE_PATH)/mkbootimg.mk
 TARGET_PREBUILT_KERNEL := device/samsung/s3ve3g/kernel
 BOARD_KERNEL_CMDLINE := console=null androidboot.console=null androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x37 androidboot.selinux=permissive
 BOARD_KERNEL_BASE := 0x00000000
@@ -21,7 +21,7 @@ BOARD_MKBOOTIMG_ARGS := --dt device/samsung/s3ve3g/dt.img --kernel_offset 0x0000
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 4096
 BOARD_BOOTIMAGE_PARTITION_SIZE := 0x00A00000
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00A7DEA0
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 11370585
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 12562643968
 # Recovery
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
@@ -31,6 +31,7 @@ TARGET_USERIMAGES_USE_F2FS := true
 BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_15x24.h\"
 BOARD_SUPPRESS_EMMC_WIPE := true
 # TWRP
+TARGET_RECOVERY_IS_MULTIROM := true
 DEVICE_RESOLUTION := 720x1280
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
 RECOVERY_SDCARD_ON_DATA := true
@@ -53,4 +54,18 @@ TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun0/file
 # Time services
 BOARD_USES_QC_TIME_SERVICES := true
-
+# Multirom
+HAVE_SELINUX := true
+MR_INPUT_TYPE := type_b
+MR_INIT_DEVICES := $(LOCAL_PATH)/mr_init_devices.c
+MR_DPI := hdpi
+MR_DPI_FONT := 216
+MR_FSTAB := $(LOCAL_PATH)/recovery/twrp.fstab
+# End of first RAM region is 0x083fffff, so we set it to for example 0x06500000
+MR_KEXEC_MEM_MIN := 0x06500000
+MR_KEXEC_DTB := true
+MR_USE_QCOM_OVERLAY := true
+MR_QCOM_OVERLAY_HEADER := "device/samsung/s3ve3g/headers//msm_mdp.h"
+MR_QCOM_OVERLAY_HEADER2 := "hardware/qcom/msm8x26/kernel-headers/linux/msm_ion.h"
+MR_QCOM_OVERLAY_CUSTOM_PIXEL_FORMAT := MDP_RGBX_8888
+# MR_INFOS := d$(LOCAL_PATH)/mrom_infos
